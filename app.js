@@ -21,6 +21,8 @@ function MainCtrl($scope, $interval, $q, $http, appData) {
     exporterMenuCsv: false,
     enableGridMenu: true,
     gridMenuTitleFilter: fakeI18n,
+    exporterExcelFilename: 'ui-grid-migration.xlsx',
+    exporterExcelSheetName: 'Sheet1',
     columnDefs: [{
         name:'actions',
         displayName:'Actions',
