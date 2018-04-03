@@ -1,0 +1,10 @@
+#grid-container{
+  width:1000px;
+  margin:50px auto;
+  text-align:center;
+}
+.grid {
+    width: 600px;
+    height: 350px;
+    text-align:left;
+  }
