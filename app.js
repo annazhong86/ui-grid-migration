@@ -7,13 +7,42 @@ angular.module('app', [
                         'ui.grid.moveColumns',
                         'ui.grid.pinning',
                         'ui.grid.grouping',
-                        'ui.grid.selection'
+                        'ui.grid.selection',
+                        'ui.grid.saveState'
                       ]
   ).controller('MainCtrl', MainCtrl);
 
 function MainCtrl($scope, $interval, $q, $http, appData) {
   var vm = this;
   vm.appData = appData;
+  vm.gridColumnDefs = [{
+    name:'actions',
+    displayName:'Actions',
+    cellTemplate:'<a ng-click="grid.appScope.testFunction()" class="action-icons view-icons-gray" title="View"></a>'
+                  +'<a ng-click="grid.appScope.testFunction()" class="action-icons edit-icons-gray" title="Manage"></a>'
+                  +'<a ng-click="grid.appScope.testFunction()" class="action-icons copy-icons-gray" title="Duplicate Request"></a>'
+                  +'<a ng-click="grid.appScope.testFunction()" class="action-icons delete-icons-gray" title="Cancel"></a>'
+                  +'<a ng-click="grid.appScope.testFunction()" title="Claim Project" class="btn claim-btn">Claim</a>'
+                  +'<a ng-click="grid.appScope.testFunction()" class="action-icons approve-costs-icons-gray" title="Approve Costs"></a>'
+  },
+  {
+    name:'projectId',
+    displayName:'Project Id'
+    
+  },
+  {
+    name:'projectState',
+    displayName:'Project State'
+  },
+  {
+    name:'submitter',
+    displayName:'Submitter'
+  },
+  {
+    name:'request.comments',
+    displayName:'Comments'
+  }];
+  
   vm.gridOptions = {
     paginationPageSizes: [5, 10, 15],
     paginationPageSize: 5,
@@ -23,33 +52,28 @@ function MainCtrl($scope, $interval, $q, $http, appData) {
     gridMenuTitleFilter: fakeI18n,
     exporterExcelFilename: 'ui-grid-migration.xlsx',
     exporterExcelSheetName: 'Sheet1',
-    columnDefs: [{
-        name:'actions',
-        displayName:'Actions',
-        cellTemplate:'<a ng-click="grid.appScope.testFunction()" class="action-icons view-icons-gray" title="View"></a>'
-                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons edit-icons-gray" title="Manage"></a>'
-                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons copy-icons-gray" title="Duplicate Request"></a>'
-                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons delete-icons-gray" title="Cancel"></a>'
-                      +'<a ng-click="grid.appScope.testFunction()" title="Claim Project" class="btn claim-btn">Claim</a>'
-                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons approve-costs-icons-gray" title="Approve Costs"></a>'
-      },
-      {
-        name:'projectId',
-        displayName:'Project Id'
-        
-      },
-      {
-        name:'projectState',
-        displayName:'Project State'
-      },
-      {
-        name:'submitter',
-        displayName:'Submitter'
-      },
-      {
-        name:'request.comments',
-        displayName:'Comments'
-      }]
+    //columnDefs:vm.gridColumnDefs,
+    onRegisterApi: function(gridApi){
+      $scope.gridApi = gridApi;
+    }
+  };
+
+  //$scope.state = {};
+  $scope.saveState = function(){
+    $scope.state = $scope.gridApi.saveState.save();
+    console.log($scope.state)
+  }
+  $scope.restoreState = function(){
+    $scope.gridApi.saveState.restore($scope, $scope.state);
+    console.log($scope.state)
+  }
+ // console.log($scope.state)
+ // console.log($scope.state.length)
+  if($scope.state && $scope.state.columns){
+    vm.gridOptions.columnDefs = [];
+    vm.gridOptions.columnDefs.push($scope.state.columns);
+  } else {
+    vm.gridOptions.columnDefs = vm.gridColumnDefs;
   }
 
   function fakeI18n(title){
