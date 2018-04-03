@@ -21,13 +21,33 @@ function MainCtrl($scope, $interval, $q, $http, appData) {
     exporterMenuCsv: false,
     enableGridMenu: true,
     gridMenuTitleFilter: fakeI18n,
-    columnDefs: [
-      {name:'Actions'},
-      {name:'projectId'},
-      {name:'projectState'},
-      {name:'submitter'},
-      {name:'request.comments'}
-    ]
+    columnDefs: [{
+        name:'actions',
+        displayName:'Actions',
+        cellTemplate:'<a ng-click="grid.appScope.testFunction()" class="action-icons view-icons-gray" title="View"></a>'
+                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons edit-icons-gray" title="Manage"></a>'
+                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons copy-icons-gray" title="Duplicate Request"></a>'
+                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons delete-icons-gray" title="Cancel"></a>'
+                      +'<a ng-click="grid.appScope.testFunction()" title="Claim Project" class="btn claim-btn">Claim</a>'
+                      +'<a ng-click="grid.appScope.testFunction()" class="action-icons approve-costs-icons-gray" title="Approve Costs"></a>'
+      },
+      {
+        name:'projectId',
+        displayName:'Project Id'
+        
+      },
+      {
+        name:'projectState',
+        displayName:'Project State'
+      },
+      {
+        name:'submitter',
+        displayName:'Submitter'
+      },
+      {
+        name:'request.comments',
+        displayName:'Comments'
+      }]
   }
 
   function fakeI18n(title){
@@ -36,6 +56,10 @@ function MainCtrl($scope, $interval, $q, $http, appData) {
         resolve( 'col: ' + title );
       }, 1000, 1);
     });
+  }
+
+  $scope.testFunction = function(){
+    alert("Hello\nHow are you?");
   }
 
   /*($http.get('map_hpe_db.projects.json')
