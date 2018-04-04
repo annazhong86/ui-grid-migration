@@ -5,10 +5,10 @@
 }
 .grid {
     width: 1200px;
-    height: 550px;
+    height: 350px;
     text-align:left;
   }
-
+  .active { color: red; font-weight: bolder; }
   .action-icons{
     position: relative;
     float: left;

@@ -1,5 +1,6 @@
 angular.module('app', [
-                        'ngTouch', 
+                        'ngTouch',
+                        'ui.router', 
                         'ui.grid', 
                         'ui.grid.pagination',
                         'ui.grid.exporter',  
@@ -12,7 +13,7 @@ angular.module('app', [
                       ]
   ).controller('MainCtrl', MainCtrl);
 
-function MainCtrl($scope, $interval, $q, $http, appData) {
+function MainCtrl($scope, $interval, $q, $http, appData, $location, $transitions) {
   var vm = this;
   vm.appData = appData;
   vm.gridColumnDefs = [{
@@ -52,30 +53,37 @@ function MainCtrl($scope, $interval, $q, $http, appData) {
     gridMenuTitleFilter: fakeI18n,
     exporterExcelFilename: 'ui-grid-migration.xlsx',
     exporterExcelSheetName: 'Sheet1',
-    //columnDefs:vm.gridColumnDefs,
+    columnDefs:vm.gridColumnDefs,
     onRegisterApi: function(gridApi){
       $scope.gridApi = gridApi;
     }
   };
 
-  //$scope.state = {};
-  $scope.saveState = function(){
-    $scope.state = $scope.gridApi.saveState.save();
-    console.log($scope.state)
-  }
-  $scope.restoreState = function(){
-    $scope.gridApi.saveState.restore($scope, $scope.state);
-    console.log($scope.state)
-  }
- // console.log($scope.state)
- // console.log($scope.state.length)
-  if($scope.state && $scope.state.columns){
-    vm.gridOptions.columnDefs = [];
-    vm.gridOptions.columnDefs.push($scope.state.columns);
-  } else {
-    vm.gridOptions.columnDefs = vm.gridColumnDefs;
+  if(window.localStorage.getItem('gridState')){
+    $scope.restoreState();
   }
 
+  $transitions.onSuccess({from:'uiGrid'}, function(transition){
+    $scope.saveState();
+  });
+  
+  //$scope.$on('$locationChangeStart', function(event, url){
+    //$scope.saveState();
+  //})
+
+  $scope.saveState = function(){
+    $scope.state = $scope.gridApi.saveState.save();
+    window.localStorage.setItem('gridState',$scope.state)
+    console.log($scope.state)
+  }
+
+  $scope.restoreState = function(){
+    console.log(window.localStorage.getItem('gridState'))
+    $scope.state = window.localStorage.getItem('gridState');
+    console.log($scope.state)
+    $scope.gridApi.saveState.restore($scope, $scope.state);
+  }
+  
   function fakeI18n(title){
     return $q(function(resolve) {
       $interval(function() {

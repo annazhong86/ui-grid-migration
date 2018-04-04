@@ -5,28 +5,11 @@
     <link rel="stylesheet" href="http://ui-grid.info/release/ui-grid.css" type="text/css" />
     <link rel="stylesheet" href="app.css" type="text/css" />
 </head>
-<body>
-    <div id="grid-container" ng-controller="MainCtrl as $ctrl">
-        <button id="save" type="button" class="btn btn-success" ng-click="saveState()">Save</button>
-        <button id="restore" type="button" class="btn btn-success" ng-click="restoreState()">Restore</button>
-        <p>This is the ui-grid page, <a href="state-test.html" title="Go back to the grid page" target="_self">go to the grid state test page.</a></p>
-        <div 
-            id="data-grid" 
-            ui-grid="$ctrl.gridOptions" 
-            ui-grid-pagination 
-            ui-grid-resize-columns 
-            ui-grid-move-columns
-            ui-grid-exporter 
-            ui-grid-selection
-            ui-grid-pinning
-            ui-grid-grouping
-            ui-grid-save-state
-            class="grid">
-        </div>
-        
-    </div>
+<body ng-controller="MainCtrl as $ctrl"> 
+       <ui-view></ui-view>
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.js"></script>
+    <script src="node_modules\@uirouter\angularjs\release\angular-ui-router.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-touch.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-animate.js"></script>
     <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
@@ -39,6 +22,6 @@
 
     <script src="app.js"></script>
     <script src="app-data.js"></script>
-
+    <script src="app-state.js"></script>
 </body>
 </html>
